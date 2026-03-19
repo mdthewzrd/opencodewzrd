@@ -2,10 +2,11 @@
 
 /**
  * WZRD.dev - Launch OpenCode with Remi AI
- * Launches OpenCode TUI with opencode-wzrd extension and Remi agent
+ * Launches OpenCode TUI with WZRD extension
  */
 
-const { spawn } = require('child_process');
+const { spawn, execSync } = require('child_process');
+const fs = require('fs');
 const path = require('path');
 
 console.log('╔══════════════════════════════════════════════════════════╗');
@@ -14,30 +15,25 @@ console.log('║              with Remi AI Agent                          ║');
 console.log('╚══════════════════════════════════════════════════════════╝\n');
 
 // Check if opencode is installed
-const { execSync } = require('child_process');
-const fs = require('fs');
-
 try {
-  // Try to find opencode
   execSync('which opencode', { stdio: 'ignore' });
   
   console.log('✅ OpenCode found');
-  console.log('🚀 Launching OpenCode with WZRD.dev extension...\n');
+  console.log('🚀 Launching OpenCode TUI...\n');
+  console.log('💡 Your WZRD.dev extension (opencode-wzrd) should load automatically.');
+  console.log('   If not, install it in OpenCode with: opencode agent add opencode-wzrd\n');
   
-  // Launch opencode tui with extension
-  const opencode = spawn('opencode', ['tui', '--extension', 'opencode-wzrd'], {
+  // Launch opencode tui
+  const opencode = spawn('opencode', ['tui'], {
     stdio: 'inherit',
     env: {
       ...process.env,
-      WZRD_AGENT: 'remi',
-      OPENCODE_EXTENSION: 'opencode-wzrd'
+      WZRD_AGENT: 'remi'
     }
   });
   
   opencode.on('error', (err) => {
     console.error('❌ Failed to launch OpenCode:', err.message);
-    console.log('\n💡 OpenCode might not be installed.');
-    console.log('   Install from: https://opencode.dev\n');
     process.exit(1);
   });
   
@@ -47,13 +43,13 @@ try {
   
 } catch (error) {
   console.error('❌ OpenCode not found on your system.');
-  console.log('\n📦 Install OpenCode first:');
+  console.log('\n📦 Install OpenCode:');
   console.log('   macOS:  brew install opencode');
-  console.log('   Linux:  curl -fsSL https://opencode.dev/install.sh | bash');
   console.log('   NPM:    npm install -g @opencode/cli');
-  console.log('\n💡 Or use the standalone WZRD CLI:\n');
+  console.log('   Web:    https://opencode.dev\n');
   
   // Fallback to standalone CLI
+  console.log('💡 Using standalone WZRD CLI instead...\n');
   const cliPath = path.join(__dirname, 'dist', 'cli.js');
   if (fs.existsSync(cliPath)) {
     spawn('node', [cliPath], { stdio: 'inherit' });
