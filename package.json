@@ -1,11 +1,12 @@
 {
   "name": "opencode-wzrd",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "WZRD.dev agent for OpenCode - Auto-mode AI assistant with 5 modes and 180+ skills",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "wzrd": "wzrd-launch",
+    "wzrd.dev": "wzrd.dev",
+    "wzrd": "wzrd.dev",
     "wzrd-cli": "dist/cli.js"
   },
   "scripts": {
@@ -55,7 +56,7 @@
   "files": [
     "dist",
     "skills",
-    "wzrd-launch",
+    "wzrd.dev",
     "README.md",
     "LICENSE"
   ],
@@ -64,7 +65,7 @@
     "name": "Remi",
     "description": "WZRD.dev agent with auto-mode detection",
     "icon": "🤖",
-"version": "0.2.0",
+    "version": "0.2.0",
     "compatibility": {
       "opencode": ">=1.0.0"
     },
