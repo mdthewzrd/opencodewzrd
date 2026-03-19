@@ -12,22 +12,16 @@ const os = require('os');
 
 const homeDir = os.homedir();
 const wzrdDir = path.join(homeDir, 'wzrd-redesign');
-// Try different entry points in order of preference
-const possibleBinaries = [
-  path.join(wzrdDir, 'bin', 'wzrd-dev-optimized'),  // Full TUI (if works)
-  path.join(wzrdDir, 'bin', 'wzrd-redesign'),       // Alternative TUI
-  path.join(wzrdDir, 'bin', 'wzrd-cli')             // Basic CLI (fallback)
-];
 
 console.log('╔══════════════════════════════════════════════════════════╗');
-console.log('║              WZRD.dev - AI Development Assistant          ║');
-console.log('║              Powered by Remi AI Agent                     ║');
+console.log('║           WZRD.dev - AI Development Assistant            ║');
+console.log('║              Powered by Remi AI Agent                    ║');
 console.log('╚══════════════════════════════════════════════════════════╝\n');
 
 // Check if wzrd-redesign is installed
 if (!fs.existsSync(wzrdDir)) {
   console.log('📦 WZRD.dev framework not found. Installing...');
-  console.log('	This is a one-time setup...\n');
+  console.log('   This is a one-time setup...\n');
   
   try {
     // Clone wzrd-redesign
@@ -48,14 +42,20 @@ if (!fs.existsSync(wzrdDir)) {
     
   } catch (error) {
     console.error('❌ Failed to install WZRD.dev framework');
-    console.error('	 Error:', error.message);
-    console.log('\n💡 You can still use the basic CLI mode:\n');
+    console.error('   Error:', error.message);
+    console.log('\n💡 Falling back to basic CLI mode...\n');
     runBasicCLI();
     return;
   }
 }
 
-// Find a working binary
+// Try to find a working binary
+const possibleBinaries = [
+  path.join(wzrdDir, 'bin', 'wzrd-dev-optimized'),  // Full TUI
+  path.join(wzrdDir, 'bin', 'wzrd-redesign'),       // Alternative TUI  
+  path.join(wzrdDir, 'bin', 'wzrd-cli')             // Basic CLI
+];
+
 const workingBinary = possibleBinaries.find(bin => fs.existsSync(bin));
 
 if (!workingBinary) {
@@ -67,38 +67,6 @@ if (!workingBinary) {
 console.log('🚀 Launching WZRD.dev TUI with Remi AI...\n');
 
 const tui = spawn('node', [workingBinary, '--mode', 'chat'], {
-  stdio: 'inherit',
-  env: { 
-    ...process.env,
-    WZRD_HOME: wzrdDir,
-    WZRD_AGENT: 'remi',
-    WZRD_MODE: 'tui'
-  }
-});
-    
-    // Install dependencies
-    console.log('\n📦 Installing dependencies...');
-    execSync('npm install', { 
-      stdio: 'inherit',
-      cwd: wzrdDir
-    });
-    
-    console.log('\n✅ WZRD.dev framework installed!\n');
-    console.log('🚀 Launching WZRD.dev TUI with Remi AI...\n');
-    
-  } catch (error) {
-    console.error('❌ Failed to install WZRD.dev framework');
-    console.error('   Error:', error.message);
-    console.log('\n💡 You can still use the basic CLI mode:\n');
-    runBasicCLI();
-    return;
-  }
-}
-
-// Launch WZRD.dev TUI
-console.log('🚀 Launching WZRD.dev TUI with Remi AI...\n');
-
-const tui = spawn('node', [wzrdBinary, '--mode', 'chat'], {
   stdio: 'inherit',
   env: { 
     ...process.env,
