@@ -1,0 +1,48 @@
+name: Test Package
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Lint
+      run: npm run lint
+    
+    - name: Build
+      run: npm run build
+    
+    - name: Test CLI
+      run: |
+        # Test CLI help
+        node dist/cli.js --help
+        
+        # Test mode listing
+        node dist/cli.js modes
+        
+        # Test skill listing
+        node dist/cli.js skills
+    
+    - name: Create tarball
+      run: npm pack
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: package-tarball
+        path: wzrddev-opencode-remi-*.tgz

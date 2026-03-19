@@ -4,7 +4,7 @@
 
 ```bash
 # Install with one command
-curl -s https://raw.githubusercontent.com/wzrddev/opencodewzrd/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/mdthewzrd/opencodewzrd/main/install.sh | bash
 ```
 
 ## 📋 What You Get
@@ -152,7 +152,7 @@ wzrd skills
 1. **Explore all modes**: `wzrd modes`
 2. **See loaded skills**: `wzrd skills`
 3. **Read full docs**: [README.md](README.md)
-4. **Join community**: [GitHub Issues](https://github.com/wzrddev/opencodewzrd/issues)
+4. **Join community**: [GitHub Issues](https://github.com/mdthewzrd/opencodewzrd/issues)
 
 ## 🆘 Need Help?
 
@@ -164,7 +164,7 @@ wzrd --help
 wzrd --version
 
 # Create issue on GitHub
-open https://github.com/wzrddev/opencodewzrd/issues/new
+open https://github.com/mdthewzrd/opencodewzrd/issues/new
 ```
 
 ---

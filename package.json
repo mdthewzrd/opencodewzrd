@@ -30,12 +30,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wzrddev/opencodewzrd.git"
+    "url": "https://github.com/mdthewzrd/opencodewzrd.git"
   },
   "bugs": {
-    "url": "https://github.com/wzrddev/opencodewzrd/issues"
+    "url": "https://github.com/mdthewzrd/opencodewzrd/issues"
   },
-  "homepage": "https://github.com/wzrddev/opencodewzrd#readme",
+  "homepage": "https://github.com/mdthewzrd/opencodewzrd#readme",
   "engines": {
     "node": ">=16.0.0"
   },

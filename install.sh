@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # WZRD.dev OpenCode Extension Installer
-# One-line installer: curl -s https://raw.githubusercontent.com/wzrddev/opencodewzrd/main/install.sh | bash
+# One-line installer: curl -s https://raw.githubusercontent.com/mdthewzrd/opencodewzrd/main/install.sh | bash
 
 set -e
 
@@ -65,7 +65,7 @@ else
         echo "✅ Created symlink: ~/.npm-global/bin/wzrd"
     else
         echo "🔧 Please download package from GitHub first"
-        echo "   git clone https://github.com/wzrddev/opencodewzrd.git"
+        echo "   git clone https://github.com/mdthewzrd/opencodewzrd.git"
         exit 1
     fi
 fi
@@ -120,7 +120,7 @@ echo "  1. Open OpenCode"
 echo "  2. Use command palette (Cmd/Ctrl+Shift+P)"
 echo "  3. Type 'Remi' to access WZRD.dev commands"
 echo ""
-echo "Documentation: https://github.com/wzrddev/opencodewzrd"
-echo "Report issues: https://github.com/wzrddev/opencodewzrd/issues"
+echo "Documentation: https://github.com/mdthewzrd/opencodewzrd"
+echo "Report issues: https://github.com/mdthewzrd/opencodewzrd/issues"
 echo ""
 echo "✨ Happy coding with Remi from WZRD.dev!"

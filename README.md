@@ -32,7 +32,7 @@ npm install @wzrddev/opencode-remi
 ### Script Installation
 
 ```bash
-curl -s https://raw.githubusercontent.com/wzrddev/opencodewzrd/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/mdthewzrd/opencodewzrd/main/install.sh | bash
 ```
 
 ## 📦 Features
@@ -176,7 +176,7 @@ opencodewzrd/
 
 ```bash
 # Clone repository
-git clone https://github.com/wzrddev/opencodewzrd.git
+git clone https://github.com/mdthewzrd/opencodewzrd.git
 cd opencodewzrd
 
 # Install dependencies
@@ -211,7 +211,7 @@ MIT © [WZRD.dev](https://wzrd.dev)
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/wzrddev/opencodewzrd)
+- [GitHub Repository](https://github.com/mdthewzrd/opencodewzrd)
 - [NPM Package](https://npmjs.com/package/@wzrddev/opencode-remi)
 - [OpenCode Marketplace](https://opencode.dev/marketplace)
 - [WZRD.dev Website](https://wzrd.dev)
@@ -225,7 +225,7 @@ Having issues? Check:
 3. **Permissions**: Check OpenCode extension permissions
 4. **Network**: Skills require internet for initial download
 
-Create an [issue on GitHub](https://github.com/wzrddev/opencodewzrd/issues) for bugs or feature requests.
+Create an [issue on GitHub](https://github.com/mdthewzrd/opencodewzrd/issues) for bugs or feature requests.
 
 ---
 
