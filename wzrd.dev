@@ -2,71 +2,58 @@
 
 /**
  * WZRD.dev Launch Command
- * Main entry point - works like server version
- * Auto-detects mode and launches appropriate interface
+ * Automatically launches WZRD.dev TUI with Remi AI
  */
 
 const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-// Check if running in OpenCode
-const isInOpenCode = process.env.OPENCODE === 'true' || 
-                     process.argv.some(arg => arg.includes('opencode'));
+// Search for wzrd-redesign TUI
+const possiblePaths = [
+  path.join(process.env.HOME || process.env.USERPROFILE || '', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
+  path.join(process.cwd(), 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
+  path.join(__dirname, '..', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
+  '/home/mdwzrd/wzrd-redesign/bin/wzrd-dev-optimized'
+];
 
-// Check if OpenCode is installed
-function checkOpenCode() {
-  try {
-    const { execSync } = require('child_process');
-    execSync('which opencode', { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
+console.log('╔══════════════════════════════════════════════════════════╗');
+console.log('║              WZRD.dev - AI Development Assistant          ║');
+console.log('║            Launching with Remi AI Agent                   ║');
+console.log('╚══════════════════════════════════════════════════════════╝\n');
+
+// Find wzrd-redesign
+let wzrdRedesignPath = possiblePaths.find(p => fs.existsSync(p));
+
+if (wzrdRedesignPath) {
+  console.log('🔍 Found WZRD.dev installation');
+  console.log('🚀 Launching WZRD.dev TUI with Remi AI...\n');
+  
+  const tui = spawn('node', [wzrdRedesignPath, '--mode', 'chat'], {
+    stdio: 'inherit',
+    env: { 
+      ...process.env, 
+      WZRD_MODE: 'tui',
+      WZRD_AGENT: 'remi'
+    }
+  });
+  
+  tui.on('error', (err) => {
+    console.error('❌ Failed to launch TUI:', err.message);
+    console.log('\n💡 Falling back to basic CLI...');
+    runBasicCLI();
+  });
+  
+  tui.on('exit', (code) => {
+    process.exit(code);
+  });
+} else {
+  console.log('⚠️  WZRD.dev TUI not found locally');
+  console.log('📦 Running basic CLI mode...\n');
+  runBasicCLI();
 }
 
-// Launch OpenCode TUI (which is the actual OpenCode experience)
-function launchOpenCode(args) {
-  console.log('🚀 Launching WZRD.dev TUI (OpenCode interface)...');
-  console.log('💡 This is the OpenCode terminal interface\n');
-  
-  // Just run the TUI - that's what OpenCode is
-  runTerminalMode(args);
-}
-
-// Run terminal mode (current behavior)
-function runTerminalMode(args) {
-  // First, try to find wzrd-redesign (the full TUI)
-  const possiblePaths = [
-    path.join(process.env.HOME || process.env.USERPROFILE || '', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
-    path.join(process.cwd(), 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
-    path.join(__dirname, '..', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized')
-  ];
-  
-  let wzrdRedesignPath = possiblePaths.find(p => fs.existsSync(p));
-  
-  if (wzrdRedesignPath) {
-    console.log('🔍 Found wzrd-redesign installation');
-    console.log('🚀 Launching full WZRD.dev TUI...\n');
-    
-    const tui = spawn('node', [wzrdRedesignPath, ...args], {
-      stdio: 'inherit',
-      env: { ...process.env, WZRD_MODE: 'tui' }
-    });
-    
-    tui.on('error', (err) => {
-      console.error('❌ TUI error:', err.message);
-      fallbackToCli(args);
-    });
-    
-    return;
-  }
-  
-  // Fallback to basic CLI if wzrd-redesign not found
-  fallbackToCli(args);
-}
-
-function fallbackToCli(args) {
+function runBasicCLI() {
   const cliPath = path.join(__dirname, 'dist', 'cli.js');
   
   if (!fs.existsSync(cliPath)) {
@@ -74,9 +61,7 @@ function fallbackToCli(args) {
     process.exit(1);
   }
   
-  console.log('💡 Running in basic CLI mode (wzrd-redesign not found)\n');
-  
-  const cli = spawn('node', [cliPath, ...args], {
+  const cli = spawn('node', [cliPath], {
     stdio: 'inherit',
     env: { ...process.env, WZRD_MODE: 'terminal' }
   });
@@ -85,125 +70,4 @@ function fallbackToCli(args) {
     console.error('❌ CLI error:', err.message);
     process.exit(1);
   });
-}
-
-// Show help
-function showHelp() {
-  console.log(`
-╔══════════════════════════════════════════════════════════╗
-║              WZRD.dev v0.2.0 - AI Assistant              ║
-║        Auto-mode detection for OpenCode & Terminal       ║
-╚══════════════════════════════════════════════════════════╝
-
-Usage: wzrd.dev [OPTIONS] [COMMAND]
-
-Commands:
-  chat <message>    Start AI chat session
-  modes             List available AI modes
-  skills            Show loaded skills  
-  setup             Setup configuration
-
-Options:
-  --opencode        Launch in OpenCode editor
-  --terminal        Force terminal mode
-  --version         Show version
-  --help            Show this help
-
-Examples:
-  wzrd.dev                          # Interactive menu
-  wzrd.dev chat "Write Python code" # Terminal chat
-  wzrd.dev --opencode               # Launch OpenCode
-  wzrd.dev modes                    # List modes
-
-Modes:
-  CHAT      - Casual conversation
-  CODER     - Code generation
-  THINKER   - Architecture & planning
-  DEBUG     - Error fixing
-  RESEARCH  - Deep analysis
-`);
-}
-
-// Main
-const args = process.argv.slice(2);
-
-// Handle flags
-if (args.includes('--help') || args.includes('-h')) {
-  showHelp();
-  process.exit(0);
-}
-
-if (args.includes('--version') || args.includes('-v')) {
-  console.log('WZRD.dev v0.2.0');
-  console.log('Package: opencode-wzrd');
-  console.log('GitHub: https://github.com/mdthewzrd/opencodewzrd');
-  process.exit(0);
-}
-
-// Launch in OpenCode
-if (args.includes('--opencode') || args.includes('-o')) {
-  if (checkOpenCode()) {
-    launchOpenCode(args.filter(a => !a.startsWith('--')));
-  } else {
-    console.error('❌ OpenCode not found');
-    console.log('\nInstall from: https://opencode.dev');
-    console.log('\nOr use terminal mode: wzrd.dev chat "Hello"');
-    process.exit(1);
-  }
-  return;
-}
-
-// Terminal mode or interactive
-if (args.length === 0) {
-  // No args - show interactive menu
-  const readline = require('readline');
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-  
-  console.log('\n╔══════════════════════════════════════════════════════════╗');
-  console.log('║          WZRD.dev - AI Development Assistant          ║');
-  console.log('╚══════════════════════════════════════════════════════════╝\n');
-  console.log('How would you like to use WZRD.dev?\n');
-  console.log('1) Terminal UI (TUI) - Interactive terminal interface');
-  console.log('2) CLI Command - One-shot command line');
-  console.log('3) Help & Documentation\n');
-  
-  rl.question('Select [1-3]: ', (choice) => {
-    rl.close();
-    
-    switch(choice.trim()) {
-      case '1':
-        // Launch TUI (which is the OpenCode experience)
-        launchOpenCode([]);
-        break;
-      case '2':
-        // CLI mode - direct command
-        console.log('\n💡 CLI Mode: Enter your request below');
-        console.log('   Or type "exit" to quit\n');
-        
-        const readline = require('readline').createInterface({
-          input: process.stdin,
-          output: process.stdout
-        });
-        
-        readline.question('wzrd> ', (input) => {
-          readline.close();
-          if (input.trim().toLowerCase() !== 'exit') {
-            runTerminalMode([input]);
-          }
-        });
-        break;
-      case '3':
-        showHelp();
-        break;
-      default:
-        console.log('Invalid choice. Please select 1, 2, or 3.');
-        showHelp();
-    }
-  });
-} else {
-  // Has args - run in terminal mode
-  runTerminalMode(args);
 }
