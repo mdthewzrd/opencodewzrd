@@ -1,106 +1,62 @@
 #!/usr/bin/env node
 
 /**
- * WZRD.dev - AI Development Assistant
- * Auto-installs and launches full WZRD.dev experience
+ * WZRD.dev - Launch OpenCode with Remi AI
+ * Launches OpenCode TUI with opencode-wzrd extension and Remi agent
  */
 
-const { spawn, execSync } = require('child_process');
+const { spawn } = require('child_process');
 const path = require('path');
-const fs = require('fs');
-const os = require('os');
-
-const homeDir = os.homedir();
-const wzrdDir = path.join(homeDir, 'wzrd-redesign');
 
 console.log('╔══════════════════════════════════════════════════════════╗');
-console.log('║           WZRD.dev - AI Development Assistant            ║');
-console.log('║              Powered by Remi AI Agent                    ║');
+console.log('║           WZRD.dev - Launching OpenCode                  ║');
+console.log('║              with Remi AI Agent                          ║');
 console.log('╚══════════════════════════════════════════════════════════╝\n');
 
-// Check if wzrd-redesign is installed
-if (!fs.existsSync(wzrdDir)) {
-  console.log('📦 WZRD.dev framework not found. Installing...');
-  console.log('   This is a one-time setup...\n');
+// Check if opencode is installed
+const { execSync } = require('child_process');
+const fs = require('fs');
+
+try {
+  // Try to find opencode
+  execSync('which opencode', { stdio: 'ignore' });
   
-  try {
-    // Clone wzrd-redesign
-    console.log('🔄 Cloning WZRD.dev framework...');
-    execSync(`git clone https://github.com/mdthewzrd/wzrd-redesign.git "${wzrdDir}"`, { 
-      stdio: 'inherit',
-      cwd: homeDir
-    });
-    
-    // Install dependencies
-    console.log('\n📦 Installing dependencies...');
-    execSync('npm install', { 
-      stdio: 'inherit',
-      cwd: wzrdDir
-    });
-    
-    console.log('\n✅ WZRD.dev framework installed!\n');
-    
-  } catch (error) {
-    console.error('❌ Failed to install WZRD.dev framework');
-    console.error('   Error:', error.message);
-    console.log('\n💡 Falling back to basic CLI mode...\n');
-    runBasicCLI();
-    return;
-  }
-}
-
-// Try to find a working binary
-const possibleBinaries = [
-  path.join(wzrdDir, 'bin', 'wzrd-dev-optimized'),  // Full TUI
-  path.join(wzrdDir, 'bin', 'wzrd-redesign'),       // Alternative TUI  
-  path.join(wzrdDir, 'bin', 'wzrd-cli')             // Basic CLI
-];
-
-const workingBinary = possibleBinaries.find(bin => fs.existsSync(bin));
-
-if (!workingBinary) {
-  console.error('❌ No working WZRD.dev entry point found');
-  runBasicCLI();
-  return;
-}
-
-console.log('🚀 Launching WZRD.dev TUI with Remi AI...\n');
-
-const tui = spawn('node', [workingBinary, '--mode', 'chat'], {
-  stdio: 'inherit',
-  env: { 
-    ...process.env,
-    WZRD_HOME: wzrdDir,
-    WZRD_AGENT: 'remi',
-    WZRD_MODE: 'tui'
-  }
-});
-
-tui.on('error', (err) => {
-  console.error('❌ Failed to launch TUI:', err.message);
-  console.log('\n💡 Falling back to basic CLI...');
-  runBasicCLI();
-});
-
-tui.on('exit', (code) => {
-  process.exit(code);
-});
-
-function runBasicCLI() {
-  const cliPath = path.join(__dirname, 'dist', 'cli.js');
+  console.log('✅ OpenCode found');
+  console.log('🚀 Launching OpenCode with WZRD.dev extension...\n');
   
-  if (!fs.existsSync(cliPath)) {
-    console.error('❌ CLI not found. Reinstall: npm install -g opencode-wzrd');
-    process.exit(1);
-  }
-  
-  const cli = spawn('node', [cliPath], {
+  // Launch opencode tui with extension
+  const opencode = spawn('opencode', ['tui', '--extension', 'opencode-wzrd'], {
     stdio: 'inherit',
-    env: { ...process.env, WZRD_MODE: 'cli' }
+    env: {
+      ...process.env,
+      WZRD_AGENT: 'remi',
+      OPENCODE_EXTENSION: 'opencode-wzrd'
+    }
   });
   
-  cli.on('error', (err) => {
-    console.error('❌ Error:', err.message);
+  opencode.on('error', (err) => {
+    console.error('❌ Failed to launch OpenCode:', err.message);
+    console.log('\n💡 OpenCode might not be installed.');
+    console.log('   Install from: https://opencode.dev\n');
     process.exit(1);
   });
+  
+  opencode.on('exit', (code) => {
+    process.exit(code);
+  });
+  
+} catch (error) {
+  console.error('❌ OpenCode not found on your system.');
+  console.log('\n📦 Install OpenCode first:');
+  console.log('   macOS:  brew install opencode');
+  console.log('   Linux:  curl -fsSL https://opencode.dev/install.sh | bash');
+  console.log('   NPM:    npm install -g @opencode/cli');
+  console.log('\n💡 Or use the standalone WZRD CLI:\n');
+  
+  // Fallback to standalone CLI
+  const cliPath = path.join(__dirname, 'dist', 'cli.js');
+  if (fs.existsSync(cliPath)) {
+    spawn('node', [cliPath], { stdio: 'inherit' });
+  }
+  process.exit(1);
 }
