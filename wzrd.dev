@@ -1,10 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * WZRD.dev - Launch OpenCode with Remi AI
- * Launches OpenCode TUI with WZRD extension
- */
-
 const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -14,17 +9,14 @@ console.log('║           WZRD.dev - Launching OpenCode                  ║');
 console.log('║              with Remi AI Agent                          ║');
 console.log('╚══════════════════════════════════════════════════════════╝\n');
 
-// Check if opencode is installed
 try {
   execSync('which opencode', { stdio: 'ignore' });
   
   console.log('✅ OpenCode found');
-  console.log('🚀 Launching OpenCode TUI...\n');
-  console.log('💡 Your WZRD.dev extension (opencode-wzrd) should load automatically.');
-  console.log('   If not, install it in OpenCode with: opencode agent add opencode-wzrd\n');
+  console.log('🚀 Launching OpenCode TUI in current directory...\n');
   
-  // Launch opencode tui
-  const opencode = spawn('opencode', ['tui'], {
+  // Launch opencode in current directory
+  const opencode = spawn('opencode', [process.cwd()], {
     stdio: 'inherit',
     env: {
       ...process.env,
@@ -42,14 +34,9 @@ try {
   });
   
 } catch (error) {
-  console.error('❌ OpenCode not found on your system.');
-  console.log('\n📦 Install OpenCode:');
-  console.log('   macOS:  brew install opencode');
-  console.log('   NPM:    npm install -g @opencode/cli');
-  console.log('   Web:    https://opencode.dev\n');
+  console.error('❌ OpenCode not found.');
+  console.log('\n📦 Install: brew install opencode or npm install -g @opencode/cli\n');
   
-  // Fallback to standalone CLI
-  console.log('💡 Using standalone WZRD CLI instead...\n');
   const cliPath = path.join(__dirname, 'dist', 'cli.js');
   if (fs.existsSync(cliPath)) {
     spawn('node', [cliPath], { stdio: 'inherit' });
