@@ -25,22 +25,13 @@ function checkOpenCode() {
   }
 }
 
-// Launch OpenCode with extension
+// Launch OpenCode TUI (which is the actual OpenCode experience)
 function launchOpenCode(args) {
-  console.log('🚀 Launching WZRD.dev in OpenCode...');
+  console.log('🚀 Launching WZRD.dev TUI (OpenCode interface)...');
+  console.log('💡 This is the OpenCode terminal interface\n');
   
-  const opencodeArgs = ['--extension', 'opencode-wzrd', ...args];
-  
-  const opencode = spawn('opencode', opencodeArgs, {
-    stdio: 'inherit',
-    env: { ...process.env, WZRD_MODE: 'opencode' }
-  });
-  
-  opencode.on('error', (err) => {
-    console.error('❌ Failed to launch OpenCode:', err.message);
-    console.log('\n💡 Falling back to terminal mode...');
-    runTerminalMode(args);
-  });
+  // Just run the TUI - that's what OpenCode is
+  runTerminalMode(args);
 }
 
 // Run terminal mode (current behavior)
@@ -139,31 +130,44 @@ if (args.length === 0) {
     output: process.stdout
   });
   
-  console.log('\nWZRD.dev - How would you like to use AI assistance?\n');
-  console.log('1) Terminal mode (text-based AI chat)');
-  console.log('2) OpenCode (editor integration)');
-  console.log('3) Help\n');
+  console.log('\n╔══════════════════════════════════════════════════════════╗');
+  console.log('║          WZRD.dev - AI Development Assistant          ║');
+  console.log('╚══════════════════════════════════════════════════════════╝\n');
+  console.log('How would you like to use WZRD.dev?\n');
+  console.log('1) Terminal UI (TUI) - Interactive terminal interface');
+  console.log('2) CLI Command - One-shot command line');
+  console.log('3) Help & Documentation\n');
   
   rl.question('Select [1-3]: ', (choice) => {
     rl.close();
     
     switch(choice.trim()) {
       case '1':
-        runTerminalMode([]);
+        // Launch TUI (which is the OpenCode experience)
+        launchOpenCode([]);
         break;
       case '2':
-        if (checkOpenCode()) {
-          launchOpenCode([]);
-        } else {
-          console.log('\n❌ OpenCode not installed');
-          console.log('Install from: https://opencode.dev');
-        }
+        // CLI mode - direct command
+        console.log('\n💡 CLI Mode: Enter your request below');
+        console.log('   Or type "exit" to quit\n');
+        
+        const readline = require('readline').createInterface({
+          input: process.stdin,
+          output: process.stdout
+        });
+        
+        readline.question('wzrd> ', (input) => {
+          readline.close();
+          if (input.trim().toLowerCase() !== 'exit') {
+            runTerminalMode([input]);
+          }
+        });
         break;
       case '3':
         showHelp();
         break;
       default:
-        console.log('Invalid choice');
+        console.log('Invalid choice. Please select 1, 2, or 3.');
         showHelp();
     }
   });
