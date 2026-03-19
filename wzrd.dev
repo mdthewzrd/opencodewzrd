@@ -36,6 +36,37 @@ function launchOpenCode(args) {
 
 // Run terminal mode (current behavior)
 function runTerminalMode(args) {
+  // First, try to find wzrd-redesign (the full TUI)
+  const possiblePaths = [
+    path.join(process.env.HOME || process.env.USERPROFILE || '', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
+    path.join(process.cwd(), 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
+    path.join(__dirname, '..', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized')
+  ];
+  
+  let wzrdRedesignPath = possiblePaths.find(p => fs.existsSync(p));
+  
+  if (wzrdRedesignPath) {
+    console.log('🔍 Found wzrd-redesign installation');
+    console.log('🚀 Launching full WZRD.dev TUI...\n');
+    
+    const tui = spawn('node', [wzrdRedesignPath, ...args], {
+      stdio: 'inherit',
+      env: { ...process.env, WZRD_MODE: 'tui' }
+    });
+    
+    tui.on('error', (err) => {
+      console.error('❌ TUI error:', err.message);
+      fallbackToCli(args);
+    });
+    
+    return;
+  }
+  
+  // Fallback to basic CLI if wzrd-redesign not found
+  fallbackToCli(args);
+}
+
+function fallbackToCli(args) {
   const cliPath = path.join(__dirname, 'dist', 'cli.js');
   
   if (!fs.existsSync(cliPath)) {
@@ -43,7 +74,8 @@ function runTerminalMode(args) {
     process.exit(1);
   }
   
-  // Run CLI
+  console.log('💡 Running in basic CLI mode (wzrd-redesign not found)\n');
+  
   const cli = spawn('node', [cliPath, ...args], {
     stdio: 'inherit',
     env: { ...process.env, WZRD_MODE: 'terminal' }
