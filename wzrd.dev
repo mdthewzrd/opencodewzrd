@@ -1,73 +1,60 @@
 #!/usr/bin/env node
 
 /**
- * WZRD.dev Launch Command
- * Automatically launches WZRD.dev TUI with Remi AI
+ * WZRD.dev - AI Development Assistant
+ * Direct launch with Remi AI
  */
 
 const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-// Search for wzrd-redesign TUI
-const possiblePaths = [
-  path.join(process.env.HOME || process.env.USERPROFILE || '', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
-  path.join(process.cwd(), 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
-  path.join(__dirname, '..', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
-  '/home/mdwzrd/wzrd-redesign/bin/wzrd-dev-optimized'
-];
-
 console.log('╔══════════════════════════════════════════════════════════╗');
 console.log('║              WZRD.dev - AI Development Assistant          ║');
-console.log('║            Launching with Remi AI Agent                   ║');
+console.log('║              Powered by Remi AI Agent                     ║');
 console.log('╚══════════════════════════════════════════════════════════╝\n');
 
-// Find wzrd-redesign
-let wzrdRedesignPath = possiblePaths.find(p => fs.existsSync(p));
+// Check for wzrd-redesign TUI
+const homeDir = process.env.HOME || process.env.USERPROFILE || '';
+const possibleTUIPaths = [
+  path.join(homeDir, 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
+  path.join(homeDir, 'wzrd-dev', 'bin', 'wzrd-dev-optimized'),
+  path.join('/home', 'mdwzrd', 'wzrd-redesign', 'bin', 'wzrd-dev-optimized'),
+];
 
-if (wzrdRedesignPath) {
-  console.log('🔍 Found WZRD.dev installation');
-  console.log('🚀 Launching WZRD.dev TUI with Remi AI...\n');
-  
-  const tui = spawn('node', [wzrdRedesignPath, '--mode', 'chat'], {
+const tuiPath = possibleTUIPaths.find(p => fs.existsSync(p));
+
+if (tuiPath) {
+  console.log('🚀 Launching WZRD.dev TUI...\n');
+  const tui = spawn('node', [tuiPath, '--mode', 'chat'], {
     stdio: 'inherit',
-    env: { 
-      ...process.env, 
-      WZRD_MODE: 'tui',
-      WZRD_AGENT: 'remi'
-    }
+    env: { ...process.env, WZRD_AGENT: 'remi' }
   });
   
-  tui.on('error', (err) => {
-    console.error('❌ Failed to launch TUI:', err.message);
-    console.log('\n💡 Falling back to basic CLI...');
-    runBasicCLI();
-  });
-  
-  tui.on('exit', (code) => {
-    process.exit(code);
-  });
+  tui.on('error', () => runBuiltInCLI());
+  tui.on('exit', (code) => process.exit(code));
 } else {
-  console.log('⚠️  WZRD.dev TUI not found locally');
-  console.log('📦 Running basic CLI mode...\n');
-  runBasicCLI();
+  console.log('💡 WZRD.dev CLI Mode\n');
+  console.log('   Tip: Install wzrd-redesign for full TUI experience');
+  console.log('   GitHub: https://github.com/mdthewzrd/wzrd-redesign\n');
+  runBuiltInCLI();
 }
 
-function runBasicCLI() {
+function runBuiltInCLI() {
   const cliPath = path.join(__dirname, 'dist', 'cli.js');
   
   if (!fs.existsSync(cliPath)) {
-    console.error('❌ CLI not found. Please reinstall: npm install -g opencode-wzrd');
+    console.error('❌ CLI not found. Reinstall: npm install -g opencode-wzrd');
     process.exit(1);
   }
   
   const cli = spawn('node', [cliPath], {
     stdio: 'inherit',
-    env: { ...process.env, WZRD_MODE: 'terminal' }
+    env: { ...process.env, WZRD_MODE: 'cli' }
   });
   
   cli.on('error', (err) => {
-    console.error('❌ CLI error:', err.message);
+    console.error('❌ Error:', err.message);
     process.exit(1);
   });
 }
