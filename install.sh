@@ -64,9 +64,44 @@ else
         ln -sf $(pwd)/dist/cli.js ~/.npm-global/bin/wzrd
         echo "✅ Created symlink: ~/.npm-global/bin/wzrd"
     else
-        echo "🔧 Please download package from GitHub first"
-        echo "   git clone https://github.com/mdthewzrd/opencodewzrd.git"
-        exit 1
+        echo "📥 Package not on NPM, cloning from GitHub..."
+        
+        # Check if git is installed
+        if ! command -v git &> /dev/null; then
+            echo "❌ git is required but not installed."
+            echo "   Please install git first: https://git-scm.com/"
+            exit 1
+        fi
+        
+        echo "🔄 Cloning repository..."
+        
+        # Clone repo to temp directory
+        TEMP_DIR=$(mktemp -d)
+        cd "$TEMP_DIR"
+        git clone https://github.com/mdthewzrd/opencodewzrd.git .
+        
+        echo "📦 Installing dependencies..."
+        npm install
+        
+        echo "📦 Building package..."
+        npm run build
+        
+        echo "🔗 Creating symlink..."
+        mkdir -p ~/.npm-global/bin
+        ln -sf "$(pwd)/dist/cli.js" ~/.npm-global/bin/wzrd
+        echo "✅ Created symlink: ~/.npm-global/bin/wzrd"
+        
+        # Add to PATH if not already
+        if [[ ":$PATH:" != *":$HOME/.npm-global/bin:"* ]]; then
+            echo "export PATH=\$HOME/.npm-global/bin:\$PATH" >> ~/.bashrc
+            echo "✅ Added ~/.npm-global/bin to PATH in ~/.bashrc"
+            echo "📝 Run 'source ~/.bashrc' or restart terminal"
+        fi
+        
+        # Clean up
+        cd -
+        rm -rf "$TEMP_DIR"
+        echo "🧹 Cleaned up temporary directory"
     fi
 fi
 
