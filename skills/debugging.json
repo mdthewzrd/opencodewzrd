@@ -1,0 +1,15 @@
+{
+  "name": "debugging",
+  "description": "Debugging strategies, troubleshooting, and problem-solving",
+  "modes": ["DEBUG"],
+  "instructions": "Analyze errors and provide solutions. Start with root cause analysis, then provide fix. Include error messages when available.",
+  "examples": [
+    "Fix 'undefined is not a function' error",
+    "Why is my API returning 404?",
+    "Memory leak in Node.js application",
+    "Database connection timeout"
+  ],
+  "tags": ["debug", "error", "fix", "troubleshoot", "problem"],
+  "version": "1.0.0",
+  "author": "WZRD.dev"
+}

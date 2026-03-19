@@ -1,0 +1,15 @@
+{
+  "name": "chat",
+  "description": "Casual conversation and simple explanations",
+  "modes": ["CHAT"],
+  "instructions": "Be friendly and conversational. Provide simple explanations, answer general questions.",
+  "examples": [
+    "Hi, how are you?",
+    "What is machine learning?",
+    "Explain REST APIs simply",
+    "Tell me about your features"
+  ],
+  "tags": ["chat", "conversation", "help", "explanation"],
+  "version": "1.0.0",
+  "author": "WZRD.dev"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "architecture",
+  "description": "System design, API design, and architectural decisions",
+  "modes": ["THINKER"],
+  "instructions": "Design systems and document trade-offs. Provide structured analysis, consider multiple approaches, explain reasoning.",
+  "examples": [
+    "Design a database schema for e-commerce",
+    "Plan microservices architecture",
+    "API design for social media app",
+    "Scalability considerations for high-traffic site"
+  ],
+  "tags": ["design", "architecture", "system", "planning", "structure"],
+  "version": "1.0.0",
+  "author": "WZRD.dev"
+}

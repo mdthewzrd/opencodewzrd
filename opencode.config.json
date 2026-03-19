@@ -1,0 +1,93 @@
+{
+  "name": "remi",
+  "displayName": "Remi - WZRD.dev Agent",
+  "version": "0.1.0",
+  "description": "AI assistant with auto-mode detection and 180+ skills",
+  "author": "WZRD.dev",
+  "license": "MIT",
+  
+  "entryPoints": {
+    "main": "./dist/index.js",
+    "cli": "./dist/cli.js"
+  },
+  
+  "capabilities": {
+    "filesystem": {
+      "read": true,
+      "write": true,
+      "execute": true
+    },
+    "network": {
+      "fetch": true,
+      "websocket": false
+    },
+    "process": {
+      "spawn": true,
+      "env": true
+    }
+  },
+  
+  "configuration": {
+    "autoModeDetection": {
+      "type": "boolean",
+      "default": true,
+      "description": "Automatically detect task type and switch modes"
+    },
+    "skillDirectory": {
+      "type": "string",
+      "default": "./skills",
+      "description": "Directory containing skill files"
+    },
+    "logLevel": {
+      "type": "string",
+      "default": "info",
+      "enum": ["debug", "info", "warn", "error"],
+      "description": "Logging level"
+    }
+  },
+  
+  "commands": [
+    {
+      "command": "remi.chat",
+      "title": "Chat with Remi",
+      "description": "Start chat session with Remi"
+    },
+    {
+      "command": "remi.modes",
+      "title": "List Remi Modes",
+      "description": "Show available modes"
+    },
+    {
+      "command": "remi.skills",
+      "title": "List Remi Skills",
+      "description": "Show loaded skills"
+    }
+  ],
+  
+  "activationEvents": [
+    "onCommand:remi.chat",
+    "onCommand:remi.modes",
+    "onCommand:remi.skills",
+    "onStartup"
+  ],
+  
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "remiView",
+          "name": "Remi Assistant"
+        }
+      ]
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "remi.chat",
+          "group": "navigation",
+          "when": "editorHasSelection"
+        }
+      ]
+    }
+  }
+}

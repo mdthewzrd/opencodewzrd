@@ -1,0 +1,15 @@
+{
+  "name": "coding",
+  "description": "Code implementation across all languages and frameworks",
+  "modes": ["CODER"],
+  "instructions": "Provide code solutions with explanations. Always output code blocks first, then explanation. Support all major programming languages.",
+  "examples": [
+    "Write a Python function to calculate factorial",
+    "Create a React component with state",
+    "Implement authentication in Express.js",
+    "Build a SQL query for user analytics"
+  ],
+  "tags": ["code", "programming", "development", "implementation"],
+  "version": "1.0.0",
+  "author": "WZRD.dev"
+}
