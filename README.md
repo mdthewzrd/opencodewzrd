@@ -1,75 +1,88 @@
-# WZRD.dev OpenCode Extension
+# WZRD.dev Remi v2 - OpenCode Extension
 
 ![WZRD.dev](https://img.shields.io/badge/WZRD.dev-AI%20Agent-blue)
 ![OpenCode](https://img.shields.io/badge/OpenCode-Extension-green)
-![Version](https://img.shields.io/npm/v/@wzrddev/opencode-remi)
-![License](https://img.shields.io/npm/l/@wzrddev/opencode-remi)
+![Version](https://img.shields.io/npm/v/opencode-wzrd)
+![License](https://img.shields.io/npm/l/opencode-wzrd)
 
-**Remi**: The WZRD.dev agent with auto-mode detection for OpenCode.
+**Remi v2**: Auto-capable AI agent for OpenCode with automatic mode detection, PIV orchestration, and skill loading.
 
-Transform your OpenCode experience with Remi, an AI assistant that automatically detects task types and switches between 5 specialized modes:
+## ✨ What's New in v2
 
-- **CHAT MODE**: Casual conversation, simple questions
-- **CODER MODE**: Code generation, implementation
-- **THINKER MODE**: Architecture, planning, design
-- **DEBUG MODE**: Error fixing, problem solving
-- **RESEARCH MODE**: Deep investigation, comprehensive analysis
+- **Auto-Gold-Standard**: Automatic file verification and attempt tracking
+- **Auto-PIV**: Plan→Implement→Validate orchestration for complex tasks
+- **Auto-Skills**: 20+ keyword mappings with priority loading
+- **9 Modes**: CHAT, CODER, DEBUG, TESTING, PLANNING, RESEARCH, DOCUMENTATION, REVIEW
+- **2.2M+ ops/sec**: Stress-tested performance
 
-## 🚀 Quick Start
+## 🚀 Installation
 
-### One-Line Installation
-
-```bash
-npx @wzrddev/opencode-remi@latest
-```
-
-### Manual Installation
+### Option 1: NPM (Recommended)
 
 ```bash
-npm install @wzrddev/opencode-remi
+npm install -g opencode-wzrd@latest
 ```
 
-### Script Installation
+### Option 2: One-Liner Script
 
 ```bash
 curl -s https://raw.githubusercontent.com/mdthewzrd/opencodewzrd/main/install.sh | bash
 ```
 
+### Option 3: Clone & Build
+
+```bash
+git clone https://github.com/mdthewzrd/opencodewzrd.git
+cd opencodewzrd
+npm install
+npm run build
+npm link
+```
+
 ## 📦 Features
 
 ### Auto-Mode Detection
-Remi automatically detects which mode to use based on your input:
 
-| Trigger | Mode |
-|---------|------|
-| "Hi", casual talk | CHAT |
-| "Write code", "function" | CODER |
-| "Design", "plan", "architecture" | THINKER |
-| "Error", "bug", "broken" | DEBUG |
-| "Research", "compare", "analyze" | RESEARCH |
+Remi automatically detects the right mode from your input:
 
-### 180+ Built-in Skills
-Access specialized skills for every task:
-- **Coding**: All languages and frameworks
-- **Debugging**: Error analysis and fixes
-- **Architecture**: System design and planning
-- **Research**: Comprehensive investigation
-- **Automation**: Task scheduling and workflows
-- **Security**: Auditing and best practices
+| Input Pattern | Mode | Example |
+|--------------|------|---------|
+| "Hi", "Hello" | CHAT | "Hi there!" |
+| "Write code", "Implement" | CODER | "Write a React component" |
+| "Error", "Bug", "Fix" | DEBUG | "Fix this error" |
+| "Test", "Validate" | TESTING | "Test the API" |
+| "Design", "Plan", "Architecture" | PLANNING | "Design a database schema" |
+| "Research", "Compare" | RESEARCH | "Research best practices" |
+| "Document", "README" | DOCUMENTATION | "Write API docs" |
+| "Review", "Audit" | REVIEW | "Review this code" |
 
-### OpenCode Integration
-- Seamless integration with OpenCode editor
-- Context-aware responses
-- Workspace integration
-- File operations support
+### Auto-PIV Orchestration
+
+Complex tasks automatically trigger Plan→Implement→Validate workflow:
+
+```bash
+# Triggers PIV (multiple signals)
+wzrd "Design and implement a new authentication system with testing"
+
+# Simple task (no PIV)
+wzrd "Fix the typo in readme"
+```
+
+### Auto-Skill Loading
+
+Skills load automatically based on keywords:
+
+- **P0 (Immediate)**: testing, debugging, security
+- **P1 (On mode enter)**: coding, research, documentation
+- **P2 (On demand)**: architecture, performance
 
 ## 🎯 Usage
 
-### CLI Commands
+### CLI
 
 ```bash
-# Start interactive session
-wzrd chat "Write a Python function to calculate Fibonacci"
+# Start with auto-mode detection
+wzrd chat "Your message here"
 
 # List available modes
 wzrd modes
@@ -83,65 +96,41 @@ wzrd setup
 
 ### OpenCode Integration
 
-Once installed, Remi integrates directly with OpenCode:
-
-1. Open any project in OpenCode
-2. Use the command palette: `Cmd/Ctrl + Shift + P`
-3. Type "Remi" to access WZRD.dev commands
-4. Ask questions directly in the editor
+1. Install the extension in OpenCode
+2. Use command palette: `Cmd/Ctrl + Shift + P`
+3. Type "Remi" for WZRD.dev commands
 
 ### Examples
 
 ```bash
-# CODER MODE example
-$ wzrd chat "Write a React component that displays a counter"
+# Auto-detects CODER mode
+$ wzrd chat "Write a Python function"
 [CODER MODE]
-I'll help you write code...
 
-# THINKER MODE example  
-$ wzrd chat "Design a database schema for an e-commerce site"
-[THINKER MODE]
-I'll help you design and plan...
-
-# DEBUG MODE example
-$ wzrd chat "I'm getting 'undefined is not a function' error"
+# Auto-detects DEBUG mode
+$ wzrd chat "Fix this error"
 [DEBUG MODE]
-I'll help you debug...
+
+# Triggers PIV (complex task)
+$ wzrd chat "Design and build a new feature"
+[PLANNING MODE] | PIV Orchestrated
 ```
 
 ## 🔧 Configuration
-
-### Setup Configuration
 
 ```bash
 wzrd setup
 ```
 
-This creates `~/.wzrd/config.json` with:
+Creates `~/.wzrd/config.json`:
 
 ```json
 {
   "autoModeDetection": true,
-  "skillDirectory": "./skills",
-  "logLevel": "info",
-  "maxResponseLength": 5000,
-  "enableSkills": true
-}
-```
-
-### Custom Skills
-
-Add custom skills to `~/.wzrd/skills/`:
-
-```json
-{
-  "name": "my-custom-skill",
-  "description": "My custom skill",
-  "modes": ["CODER", "THINKER"],
-  "instructions": "Help with my specific tasks",
-  "examples": ["Do my thing", "Help with that"],
-  "tags": ["custom", "special"],
-  "version": "1.0.0"
+  "enableAutoPIV": true,
+  "enableAutoSkills": true,
+  "enableGoldStandard": true,
+  "logLevel": "info"
 }
 ```
 
@@ -150,18 +139,18 @@ Add custom skills to `~/.wzrd/skills/`:
 ```
 opencodewzrd/
 ├── src/
-│   ├── index.ts          # Main entry point
-│   ├── agent.ts          # Core agent with mode detection
-│   ├── cli.ts            # Command line interface
-│   └── types.ts          # Type definitions
-├── skills/               # Bundled skills
-├── dist/                 # Compiled output
-├── scripts/
-│   └── bundle-skills.js  # Skill bundling script
-├── test/                 # Test files
-├── package.json          # NPM package config
-├── tsconfig.json        # TypeScript config
-└── README.md            # This file
+│   ├── index.ts              # Main entry
+│   ├── agent.ts              # Core agent
+│   ├── cli.ts                # CLI interface
+│   ├── auto-core/            # Auto-capabilities
+│   │   ├── index.ts          # Core systems
+│   │   ├── integration.ts    # Integration layer
+│   │   └── opencode-adapter.ts
+│   └── types.ts
+├── skills/                   # Bundled skills
+├── dist/                     # Compiled output
+├── package.json
+└── README.md
 ```
 
 ## 🛠️ Development
@@ -169,41 +158,15 @@ opencodewzrd/
 ### Prerequisites
 
 - Node.js 16+
-- OpenCode 1.0+
 - TypeScript 5.0+
 
-### Build from Source
+### Build
 
 ```bash
-# Clone repository
-git clone https://github.com/mdthewzrd/opencodewzrd.git
-cd opencodewzrd
-
-# Install dependencies
 npm install
-
-# Build package
 npm run build
-
-# Test locally
 npm test
 ```
-
-### Adding New Skills
-
-1. Create skill file in `example-skills/`
-2. Run `npm run build:skills` to bundle
-3. Skills will be included in distribution
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-### Skill Contributions
-- Add new skill JSON files
-- Improve existing skills
-- Update documentation
-- Report issues
 
 ## 📄 License
 
@@ -211,22 +174,10 @@ MIT © [WZRD.dev](https://wzrd.dev)
 
 ## 🔗 Links
 
-- [GitHub Repository](https://github.com/mdthewzrd/opencodewzrd)
-- [NPM Package](https://npmjs.com/package/@wzrddev/opencode-remi)
-- [OpenCode Marketplace](https://opencode.dev/marketplace)
-- [WZRD.dev Website](https://wzrd.dev)
-
-## 🆘 Support
-
-Having issues? Check:
-
-1. **OpenCode Compatibility**: Ensure OpenCode >= 1.0.0
-2. **Node.js Version**: Requires Node.js >= 16.0.0
-3. **Permissions**: Check OpenCode extension permissions
-4. **Network**: Skills require internet for initial download
-
-Create an [issue on GitHub](https://github.com/mdthewzrd/opencodewzrd/issues) for bugs or feature requests.
+- [GitHub](https://github.com/mdthewzrd/opencodewzrd)
+- [NPM](https://npmjs.com/package/opencode-wzrd)
+- [Issues](https://github.com/mdthewzrd/opencodewzrd/issues)
 
 ---
 
-**"Good architecture is invisible. Bad architecture is impossible to ignore."** - Remi, WZRD.dev Agent
+**Built with ❤️ by WZRD.dev**

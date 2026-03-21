@@ -44,3 +44,7 @@ temp/
 # Local config
 .wzrd/
 config.local.json
+
+# NPM credentials
+.npmrc
+.npm-version
