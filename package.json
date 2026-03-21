@@ -1,7 +1,7 @@
 {
   "name": "opencode-wzrd",
-  "version": "0.2.0",
-  "description": "WZRD.dev agent for OpenCode - Auto-mode AI assistant with 5 modes and 180+ skills",
+  "version": "2.0.0",
+  "description": "WZRD.dev Remi v2 - Auto-capable AI agent with Gold Standard, PIV Orchestration, and Auto-Skill Loading",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {

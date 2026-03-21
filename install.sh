@@ -24,34 +24,15 @@ fi
 echo "✅ Prerequisites checked: Node.js $(node -v), npm $(npm -v)"
 
 # Install package
-echo "📦 Installing @wzrddev/opencode-remi..."
+echo "📦 Installing opencode-wzrd..."
 
-# Method 1: Try from GitHub (when published)
-echo "🔄 Attempting to install from GitHub..."
+# Method 1: Try from NPM (published)
+echo "🔄 Attempting to install from NPM..."
 
-# First check if we have a local tarball
-if [ -f "wzrddev-opencode-remi-0.1.0.tgz" ]; then
-    echo "📦 Found local package tarball"
-    if npm install -g ./wzrddev-opencode-remi-0.1.0.tgz; then
-        echo "✅ Package installed from local tarball"
-    else
-        echo "❌ Failed to install from local tarball"
-        echo "🚧 Using development installation method..."
-        
-        # Development method: symlink
-        mkdir -p ~/.npm-global/bin
-        ln -sf $(pwd)/dist/cli.js ~/.npm-global/bin/wzrd
-        echo "✅ Created symlink: ~/.npm-global/bin/wzrd"
-        
-        # Add to PATH if not already
-        if [[ ":$PATH:" != *":$HOME/.npm-global/bin:"* ]]; then
-            echo "export PATH=\$HOME/.npm-global/bin:\$PATH" >> ~/.bashrc
-            echo "✅ Added ~/.npm-global/bin to PATH in ~/.bashrc"
-            echo "📝 Run 'source ~/.bashrc' or restart terminal"
-        fi
-    fi
-elif npm install -g @wzrddev/opencode-remi@latest; then
+if npm install -g opencode-wzrd@latest; then
     echo "✅ Package installed successfully from npm"
+else
+    echo "⚠️  Package not found on npm. Using development installation..."
 else
     echo "⚠️  Package not found on npm. Using development installation..."
     
