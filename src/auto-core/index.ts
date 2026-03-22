@@ -517,6 +517,7 @@ export class AutoCore {
   public piv: PIVOrchestrator;
   public skills: AutoSkillLoader;
   public config: AutoCoreConfig;
+  public memory: import('./memory-adapter.js').MemoryAdapter;
 
   constructor(config: Partial<AutoCoreConfig> = {}) {
     this.config = {
@@ -530,22 +531,35 @@ export class AutoCore {
     this.goldStandard = new GoldStandardEnforcer();
     this.piv = new PIVOrchestrator();
     this.skills = new AutoSkillLoader();
+
+    // Initialize memory adapter
+    const { MemoryAdapter } = require('./memory-adapter.js');
+    this.memory = new MemoryAdapter();
   }
 
   /**
    * Process user input with all auto-capabilities
+   * Now includes memory enhancement for context-aware responses
    */
   async processInput(input: string): Promise<{
     mode: string;
     skills: { loaded: string[]; alreadyLoaded: string[] };
     shouldRunPIV: boolean;
     goldStandard: boolean;
+    memory?: {
+      relevantMemories: number;
+      tokenSavings: number;
+    };
   }> {
     const result: {
       mode: string;
       skills: { loaded: string[]; alreadyLoaded: string[] };
       shouldRunPIV: boolean;
       goldStandard: boolean;
+      memory?: {
+        relevantMemories: number;
+        tokenSavings: number;
+      };
     } = {
       mode: this.detectMode(input),
       skills: { loaded: [], alreadyLoaded: [] },
@@ -561,6 +575,19 @@ export class AutoCore {
     // Check if PIV needed
     if (this.config.enableAutoPIV) {
       result.shouldRunPIV = this.piv.shouldAutoPIV(input);
+    }
+
+    // Enhance with memory (non-blocking)
+    try {
+      const memoryResult = await this.memory.enhancePrompt(input);
+      if (memoryResult.context.relevantMemories.length > 0) {
+        result.memory = {
+          relevantMemories: memoryResult.context.relevantMemories.length,
+          tokenSavings: memoryResult.context.tokenSavings
+        };
+      }
+    } catch {
+      // Memory enhancement is optional
     }
 
     return result;
@@ -588,3 +615,6 @@ export const autoCore = new AutoCore();
 
 // Re-export integration
 export { remiAuto, RemiAutoIntegration } from './integration';
+
+// Export memory adapter
+export { MemoryAdapter, memoryAdapter } from './memory-adapter';
