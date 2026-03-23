@@ -12,6 +12,7 @@
 - **Auto-Gold-Standard**: Automatic file verification and attempt tracking
 - **Auto-PIV**: Plan→Implement→Validate orchestration for complex tasks
 - **Auto-Skills**: 20+ keyword mappings with priority loading
+- **Auto-Memory**: Context-aware responses with conversation persistence
 - **9 Modes**: CHAT, CODER, DEBUG, TESTING, PLANNING, RESEARCH, DOCUMENTATION, REVIEW
 - **2.2M+ ops/sec**: Stress-tested performance
 
@@ -76,6 +77,25 @@ Skills load automatically based on keywords:
 - **P1 (On mode enter)**: coding, research, documentation
 - **P2 (On demand)**: architecture, performance
 
+### Auto-Memory System
+
+Remi remembers past conversations and automatically enhances responses:
+
+- **Context Search**: Finds relevant past conversations
+- **Token Efficiency**: Compresses old context (~90% reduction)
+- **Smart Enhancement**: Injects relevant memory before responding
+- **Persistent Storage**: Saves to `~/.wzrd/memory/`
+
+```bash
+# Memory is automatic - just use wzrd
+$ wzrd chat "Fix the login bug"
+[DEBUG MODE] | Memory: 3 relevant contexts loaded
+
+# Check memory stats
+$ wzrd memory stats
+Conversations: 42 | Patterns: 12 | Cache: 5
+```
+
 ## 🎯 Usage
 
 ### CLI
@@ -130,6 +150,9 @@ Creates `~/.wzrd/config.json`:
   "enableAutoPIV": true,
   "enableAutoSkills": true,
   "enableGoldStandard": true,
+  "enableMemory": true,
+  "memoryMaxResults": 5,
+  "memoryCompressionThreshold": 4000,
   "logLevel": "info"
 }
 ```
@@ -145,6 +168,7 @@ opencodewzrd/
 │   ├── auto-core/            # Auto-capabilities
 │   │   ├── index.ts          # Core systems
 │   │   ├── integration.ts    # Integration layer
+│   │   ├── memory-adapter.ts # Memory system
 │   │   └── opencode-adapter.ts
 │   └── types.ts
 ├── skills/                   # Bundled skills
