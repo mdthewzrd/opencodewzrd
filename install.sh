@@ -86,8 +86,23 @@ else
     fi
 fi
 
+# Setup OpenCode agent
+echo "🤖 Installing Remi agent to OpenCode..."
+AGENT_DIR="$HOME/.config/opencode/agents"
+mkdir -p "$AGENT_DIR"
+
+# Download and install agent file
+AGENT_URL="https://raw.githubusercontent.com/mdthewzrd/opencodewzrd/main/agents/remi-v2.md"
+if curl -s "$AGENT_URL" -o "$AGENT_DIR/remi-v2.md" 2>/dev/null; then
+    echo "✅ Installed Remi v2 agent to $AGENT_DIR/remi-v2.md"
+else
+    echo "⚠️ Could not download agent file. You may need to manually copy it."
+    echo "   Source: $AGENT_URL"
+    echo "   Destination: $AGENT_DIR/remi-v2.md"
+fi
+
 # Setup configuration
-echo "⚙️  Setting up configuration..."
+echo "⚙️ Setting up configuration..."
 mkdir -p ~/.wzrd
 CONFIG_FILE="$HOME/.wzrd/config.json"
 
