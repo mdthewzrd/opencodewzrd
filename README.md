@@ -201,6 +201,7 @@ MIT © [WZRD.dev](https://wzrd.dev)
 - [GitHub](https://github.com/mdthewzrd/opencodewzrd)
 - [NPM](https://npmjs.com/package/opencode-wzrd)
 - [Issues](https://github.com/mdthewzrd/opencodewzrd/issues)
+- [Setup Guide](docs/SETUP.md)
 
 ---
 
