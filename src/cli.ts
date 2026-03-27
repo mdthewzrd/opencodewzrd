@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as os from 'os';
 import { OpenCodeRemi } from './index';
 
 const program = new Command();
@@ -57,7 +58,7 @@ program
     console.log(chalk.cyan('\nSetting up WZRD.dev OpenCode extension...'));
     
     // Create config directory
-    const configDir = path.join(process.env.HOME || '.', '.wzrd');
+    const configDir = path.join(os.homedir(), '.wzrd');
     if (!fs.existsSync(configDir)) {
       fs.mkdirSync(configDir, { recursive: true });
       console.log(chalk.green(`Created config directory: ${configDir}`));
